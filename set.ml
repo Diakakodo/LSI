@@ -20,7 +20,7 @@ sig
   val pred : t -> t
 end
 
-module Entier : TypeOrdonne =
+module Entier (*: TypeOrdonne*) =
 struct
   type t = int
   let compare a b = if a > b then 1 else if a = b then 0 else -1;;
@@ -41,9 +41,16 @@ end
 
 module type Make_sig_ensemble = functor (Ord : TypeOrdonne) ->
 sig
-  type element
-  type ensemble
+  type element = Ord.t
+  (* *)
+  type couleur = Noir | Rouge
+  type arbre_bi = Vide | Noeud of couleur * element * arbre_bi * arbre_bi
+  (* *)
+  type ensemble (* *) = arbre_bi (* *)
   exception Ensemble_vide
+  (* *)
+  val ens_vide : ensemble
+  (* *)
   val est_vide : ensemble -> bool
   val appartient_a : element -> ensemble -> bool
   val ajoute : element -> ensemble -> ensemble
@@ -90,6 +97,9 @@ struct
   type ensemble = arbre_bi
   (* Exception *)
   exception Ensemble_vide
+
+  let ens_vide = Vide;;
+
   (* Test ensemble vide *)
   let est_vide a = (a = Vide);;
   let rec recherche e a =
@@ -785,6 +795,10 @@ let suppression_equilibred =
 	  | v::l -> pred_aux (acc @ [v]) l
       in liste_vers_ensemble (pred_aux [] (ensemble_vers_liste ens))
     ;;
-      
-    
 end
+
+(* Tests *)
+
+module SetInt = Make(Entier);;
+open SetInt;;
+ajoute 1 ens_vide;;
