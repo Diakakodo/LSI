@@ -775,7 +775,17 @@ let suppression_equilibred =
 	    then c
 	    else compare_aux ll1 ll2
       in
-      compare_aux (ensemble_vers_liste ens1) (ensemble_vers_liste ens2)
+      let l1 = (ensemble_vers_liste ens1)
+      and l2 = (ensemble_vers_liste ens2) in
+      let c1 = cardinal ens1
+      and c2 = cardinal ens2 in
+      if c1 > c2 then
+	1
+      else 
+	if c1 < c2 then
+	  -1
+	else
+	  compare_aux l1 l2
     ;;
     
     let succ ens =
