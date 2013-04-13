@@ -91,7 +91,7 @@ struct
   (* Exception *)
   exception Ensemble_vide
   (* Test ensemble vide *)
-  let est_vide a = (*(a = Vide);;*) raise Ensemble_vide;;
+  let est_vide a = (a = Vide);;
   let rec recherche e a =
     match a with
 	Vide -> false
