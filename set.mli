@@ -1,3 +1,17 @@
+(***********************************************************************)
+(*                                                                     *)
+(*                                Projet LSI                           *)
+(*                                                                     *)
+(* Fichier : set.mli                                                   *)
+(* Auteur : Matthieu Fin                                               *)
+(* Date : 13/04/13                                                     *)
+(*                                                                     *)
+(*                          Licence informatique 2eme année 2012/2013  *)
+(*                                  UFR-Sciences et Techniques         *)
+(*                                     Université de Rouen             *)
+(*                                                                     *)
+(***********************************************************************)
+
 (** Ensembles sur des elements ordonné.
 
    Ce module implante la structure de donnée d'ensemble sur des elements
