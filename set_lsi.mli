@@ -47,19 +47,29 @@ module Entier : TypeOrdonne
 (** Module de type TypeOrdonne pouvant servir de paramettre au 
     foncteur Make pour obtenir un ensemble d'entier.
     Ce module implantant les entiers (int). *)
-  
+
 module type Make_sig_ensemble =
   functor (Ord : TypeOrdonne) ->
 sig
-  type element
+  type element = Ord.t
     (** Le type des elements de l'ensemble. *)
 
-  type ensemble
-    (** Type des ensembles. *)
+  (* *)
+  type couleur = Noir | Rouge
+
+  type arbre_bi = Vide | Noeud of couleur * element * arbre_bi * arbre_bi
+
+  (* *)
+  type ensemble (* *) = arbre_bi (* *)
+      (** Type des ensembles. *)
 
   exception Ensemble_vide
     (** Exception levee en cas d'evaluation sur un ensemble vide impossible *)
 
+  (* *)
+  val ens_vide : ensemble
+    (** Ensemble videde type : ensemble *)
+  (* *)
   val est_vide : ensemble -> bool
     (** Param -: (a : ensemble)
 	@return 
@@ -186,4 +196,3 @@ end
 
 module Make : Make_sig_ensemble
 (** Foncteur prenant un module de type TypeOrdonne en parametre *)
-

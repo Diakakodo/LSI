@@ -808,7 +808,8 @@ let suppression_equilibred =
 end
 
 (* Tests *)
-
+(*
 module SetInt = Make(Entier);;
 open SetInt;;
 ajoute 1 ens_vide;;
+*)
