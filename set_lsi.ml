@@ -58,9 +58,9 @@ sig
   val supprime : element -> ensemble -> ensemble
 
   (* Ajout de fonctions a Make_sig_ensemble *)
-  val compare : ensemble -> ensemble -> int (* Comparaison selon l'ordre
-					       lexicographique par longueur
-					       sur la liste trier de l'ens *)
+  val compare : ensemble -> ensemble -> int(* Comparaison selon l'ordre
+					      lexicographique par longueur
+					      sur la liste trier de l'ens *)
   val succ : ensemble -> ensemble (* Exemple pour {1,3,5,7,9} 
 				     son succ est {1,3,5,7,10} *)
   val pred : ensemble -> ensemble (* Exemple pour {1,3,5,7,9}
@@ -220,10 +220,14 @@ struct
   function 
       Noeud (Noir,i,Vide,Noeud (Noir,i2,Vide,Vide)) -> 
 	(false,Noeud (Noir,i,Vide,Noeud (Rouge,i2,Vide,Vide)))
-    | Noeud (Noir,i,Vide,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide)) ->
+    | Noeud (Noir,i,
+	     Vide,
+	     Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide)) ->
 	(true,Noeud (Noir,i3,(Noeud (Noir,i,Vide,Vide)),
 		       (Noeud (Noir,i2,Vide,Vide))))
-    | Noeud (Noir,i,Vide,Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide)))) ->
+    | Noeud (Noir,i,
+	     Vide,
+	     Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide)))) ->
 	(true,Noeud (Noir,i2,(Noeud (Noir,i,Vide,Vide)),
 		       (Noeud (Noir,i3,Vide,Vide))))
     | Noeud (Noir,i,Vide,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),
@@ -263,10 +267,14 @@ struct
 			    Noeud (Noir,i4,ag4,ad4))))
     | Noeud (Rouge,i,Vide,Noeud (Noir,i2,Vide,Vide)) ->
 	(true,Noeud (Noir,i,Vide,Noeud (Rouge,i2,Vide,Vide)))
-    | Noeud (Rouge,i,Vide,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide)) -> 
+    | Noeud (Rouge,i,
+	     Vide,
+	     Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide)) -> 
 	(true,Noeud (Noir,i3,(Noeud (Rouge,i,Vide,Vide)),
 		       (Noeud (Rouge,i2,Vide,Vide))))
-    | Noeud (Rouge,i,Vide,Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide)))) ->
+    | Noeud (Rouge,i,
+	     Vide,
+	     Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide)))) ->
 	(true,Noeud (Noir,i2,(Noeud (Rouge,i,Vide,Vide)),
 		       (Noeud (Rouge,i3,Vide,Vide))))
     | Noeud (Rouge,i,Vide,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),
@@ -275,9 +283,13 @@ struct
 		       (Noeud (Noir,i,Vide,(Noeud (Rouge,i3,Vide,Vide)))),
 		       (Noeud (Noir,i4,Vide,Vide))))
     | Noeud (Noir,i,Noeud (Noir,i2,ag2,ad2),
-	     Noeud (Noir,i3,Noeud (Noir,i4,ag4,ad4),Noeud (Noir,i5,ag5,ad5))) ->
+	     Noeud (Noir,i3,
+		    Noeud (Noir,i4,ag4,ad4),
+		    Noeud (Noir,i5,ag5,ad5))) ->
 	(false,Noeud (Noir,i,Noeud (Noir,i2,ag2,ad2),
-	     Noeud (Rouge,i3,Noeud (Noir,i4,ag4,ad4),Noeud (Noir,i5,ag5,ad5))))
+	     Noeud (Rouge,i3,
+		    Noeud (Noir,i4,ag4,ad4),
+		    Noeud (Noir,i5,ag5,ad5))))
     | Noeud (Noir,i,Noeud (Noir,i2,ag2,ad2),
 	     Noeud (Noir,i3,Noeud (Rouge,i4,ag4,ad4),
 		    Noeud (Noir,i5,ag5,ad5))) ->
@@ -371,10 +383,14 @@ let suppression_equilibred =
   function 
       Noeud (Noir,i,Noeud (Noir,i2,Vide,Vide),Vide) -> 
 	(false,Noeud (Noir,i,Noeud (Rouge,i2,Vide,Vide),Vide))
-    | Noeud (Noir,i,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide),Vide) ->  
+    | Noeud (Noir,i,
+	     Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide),
+	     Vide) ->  
 	(true,Noeud (Noir,i2,(Noeud (Noir,i3,Vide,Vide)),
 		       (Noeud (Noir,i,Vide,Vide))))
-    | Noeud (Noir,i,Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide))),Vide) ->
+    | Noeud (Noir,i,
+	     Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide))),
+	     Vide) ->
 	(true,Noeud (Noir,i3,(Noeud (Noir,i2,Vide,Vide)),
 		       (Noeud (Noir,i,Vide,Vide))))
     | Noeud (Noir,i,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),
@@ -418,10 +434,14 @@ let suppression_equilibred =
 			    Noeud (Rouge,i,Vide,Vide))))
     | Noeud (Rouge,i,Noeud (Noir,i2,Vide,Vide),Vide) ->	
 	(true,Noeud (Noir,i,Noeud (Rouge,i2,Vide,Vide),Vide))
-    | Noeud (Rouge,i,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide),Vide) -> 
+    | Noeud (Rouge,i,
+	     Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),Vide),
+	     Vide) -> 
 	(true,Noeud (Noir,i2,(Noeud (Rouge,i3,Vide,Vide)),
 		       (Noeud (Rouge,i,Vide,Vide))))
-    | Noeud (Rouge,i,Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide))),Vide) ->
+    | Noeud (Rouge,i,
+	     Noeud (Noir,i2,Vide,(Noeud (Rouge,i3,Vide,Vide))),
+	     Vide) ->
 	(true,Noeud (Noir,i3,
 		     (Noeud (Rouge,i2,Vide,Vide)),
 		     (Noeud (Rouge,i,Vide,Vide))))
@@ -562,7 +582,8 @@ let suppression_equilibred =
             (if b then
                 (true, x, Noeud(c, i, a, sad))
             else
-		(let (b2,a2) = (suppression_equilibreg(Noeud(c, i, a, sad))) in
+		(let (b2,a2) = (suppression_equilibreg(Noeud(c, i, a, sad)))
+		 in
 		 (b2, x, a2))));;
 
     let rec suppression_rech e a =
@@ -582,9 +603,10 @@ let suppression_equilibred =
           (match ad with
               Vide ->
 		(match ag with
-                   Vide when c=Rouge         ->(true,Vide)
-                  |Vide                      ->(false,Vide)
-		  |Noeud (Rouge,i2,Vide,Vide)->(true,Noeud (Noir,i2,Vide,Vide)))
+                   Vide when c=Rouge          -> (true,Vide)
+                  |Vide                       -> (false,Vide)
+		  |Noeud (Rouge,i2,Vide,Vide) ->
+		    (true,Noeud (Noir,i2,Vide,Vide)))
             |Noeud (c2,i2,ag2,ad2) ->
               (let (b,x,a2)=(succ_arbre (Noeud (c2,i2,ag2,ad2))) in
                (if b 
@@ -615,7 +637,10 @@ let suppression_equilibred =
 	  | Vide,a2 -> acc
 	  | a1,Vide -> acc
 	  | (Noeud (c,e,ag,ad)),a2 when (appartient_a e a2) -> 
-	    aux (supprime e (Noeud (c,e,ag,ad))) (supprime e a2) (ajoute e acc)
+	    (aux
+	       (supprime e (Noeud (c,e,ag,ad)))
+	       (supprime e a2)
+	       (ajoute e acc))
 	  | (Noeud (c,e,ag,ad)),a2 -> 
 	    aux (supprime e (Noeud (c,e,ag,ad))) (a2) (acc)
       in
@@ -808,8 +833,19 @@ let suppression_equilibred =
 end
 
 (* Tests *)
-(*
+
 module SetInt = Make(Entier);;
 open SetInt;;
 ajoute 1 ens_vide;;
-*)
+
+module Chaine =
+struct
+  type t = string;;
+  let compare a b = String.compare a b;;
+  let succ a = a;;
+  let pred a = a;;
+end
+
+module SetString = Make(Chaine);;
+open SetString;;
+ensemble_vers_liste (ajoute "2" ens_vide);;
