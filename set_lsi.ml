@@ -20,33 +20,14 @@ sig
   val pred : t -> t
 end
 
-module Entier (*: TypeOrdonne*) =
-struct
-  type t = int
-  let compare a b = if a > b then 1 else if a = b then 0 else -1;;
-  let succ a = a + 1;;
-  let pred a = a - 1;;
-end
-
-(*
-module CoupleEntier =
-struct
-  type t = int*int
-  let compare = ...
-  let succ (a,b) = (a,(b+1))
-  let pred (a,b) = (a,(b-1))
-end
-  *)
-
-
 module type Make_sig_ensemble = functor (Ord : TypeOrdonne) ->
 sig
   type element = Ord.t
-  (* *)
+  (* )
   type couleur = Noir | Rouge
   type arbre_bi = Vide | Noeud of couleur * element * arbre_bi * arbre_bi
-  (* *)
-  type ensemble (* *) = arbre_bi (* *)
+  ( *)
+  type ensemble (* ) = arbre_bi ( *)
   exception Ensemble_vide
   (* *)
   val ens_vide : ensemble
@@ -834,18 +815,91 @@ end
 
 (* Tests *)
 
+module Entier =
+struct
+  type t = int;;
+  let compare (a : t) (b : t) =
+    if a > b then 1 else if a = b then 0 else -1;;
+  let succ (a : t) = a + 1;;
+  let pred (a : t) = a - 1;;
+end
+
+
+module CoupleEntierEntier =
+struct
+  type t = int * int;;
+  let compare (a : t) (b : t) =
+    if a > b then 1 else if a = b then 0 else -1;;
+  let succ ((a,b) : t) = (a,(b+1));;
+  let pred ((a,b) : t) = (a,(b-1));;
+end
+
+module CoupleEntierChar =
+struct
+  type t = int * char;;
+  let compare (a : t) (b : t) =
+    if a > b then 1 else if a = b then 0 else -1;;
+  let succ ((a,b) : t) =
+    if (int_of_char b) = 255 then
+      ((a + 1),(char_of_int 0))
+    else
+      (a,(char_of_int ((int_of_char b) + 1)));;
+  let pred ((a,b) : t) =
+    if (int_of_char b) = 0 then
+      ((a - 1),(char_of_int 255))
+    else
+      (a,(char_of_int ((int_of_char b) - 1)));;
+end
+
+
 module SetInt = Make(Entier);;
 open SetInt;;
 ajoute 1 ens_vide;;
 
-module Chaine =
+(*
+module PartiesEnsemble (Make : Make_sig_ensemble) (Ord : TypeOrdonne) =
 struct
-  type t = string;;
-  let compare a b = String.compare a b;;
-  let succ a = a;;
-  let pred a = a;;
+  let compare ens1 ens2 =
+    let rec compare_aux l1 l2 = 
+      match l1,l2 with
+	  [],[] -> 0
+	| l,[] -> 1
+	| [],l -> -1
+	| (v1::ll1,v2::ll2) -> 
+	  let c = Ord.compare v1 v2 in
+	  if c != 0
+	  then c
+	  else compare_aux ll1 ll2
+    in
+    let l1 = (ensemble_vers_liste ens1)
+    and l2 = (ensemble_vers_liste ens2) in
+    let c1 = cardinal ens1
+    and c2 = cardinal ens2 in
+    if c1 > c2 then
+      1
+    else 
+      if c1 < c2 then
+	-1
+      else
+	compare_aux l1 l2
+    ;;
+  
+  let succ ens =
+    let rec succ_aux acc li = 
+      match li with
+          [] -> raise Ensemble_vide
+	| v::[] -> acc @ [(Ord.succ v)]
+	| v::l -> succ_aux (acc @ [v]) l
+    in liste_vers_ensemble (succ_aux [] (ensemble_vers_liste ens))
+  ;;
+  
+  let pred ens =
+      let rec pred_aux acc li = 
+	match li with
+            [] -> raise Ensemble_vide
+	  | v::[] -> acc @ [(Ord.pred v)]
+	  | v::l -> pred_aux (acc @ [v]) l
+      in liste_vers_ensemble (pred_aux [] (ensemble_vers_liste ens))
+    ;;
 end
-
-module SetString = Make(Chaine);;
-open SetString;;
-ensemble_vers_liste (ajoute "2" ens_vide);;
+*)

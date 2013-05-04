@@ -1,5 +1,6 @@
 
-(*#load "set_lsi.cmo";;*)
+(*#load "set_lsi.cmo";;
+#use "set_lsi.ml";;*)
 open Set_lsi;;
 
 print_string 
