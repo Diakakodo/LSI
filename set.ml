@@ -1,24 +1,26 @@
+(***********************************************************************)
+(*                                                                     *)
+(*                                Projet LSI                           *)
+(*                                                                     *)
+(* Fichier : set.ml                                                    *)
+(* Auteurs : Fin Matthieu                                              *)
+(*           Poinsot Clement                                           *)
+(* Date : 10/05/13                                                     *)
+(*                                                                     *)
+(*                          Licence informatique 2eme année 2012/2013  *)
+(*                                  UFR-Sciences et Techniques         *)
+(*                                     Université de Rouen             *)
+(*                                                                     *)
+(***********************************************************************)
 
-(*#load "set_lsi.cmo";;
-#use "set_lsi.ml";;*)
 open Set_lsi;;
+
+module SetInt = Make(Entier);;
 
 print_string 
 "Bienvenue dans le gestionnaire d'ensembles magique !
 Veuillez choisir un ensemble :
 entier, coupleEntierEntier, coupleEntierChar\n";;
-
-(*
-let rec set (s : string) = 
-  if s = "exit" then
-    let () = print_string "Bye !"
-    in print_newline ()
-  else
-    begin
-      print_newline (print_string s);
-      set (read_line ());
-    end
-;;*)
 
 let rec set_entier (s : string) (l : int list) = 
   let string_of_listInt l =
@@ -95,5 +97,3 @@ let rec selection_set (s : string) =
 
 
 selection_set (read_line (print_string "$ "));;
-(*calc Gdnb.("3" $+ "3");;*)
-(*calc (Gdnb.($+) "3" "3");;*)

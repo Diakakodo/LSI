@@ -2,9 +2,10 @@
 (*                                                                     *)
 (*                                Projet LSI                           *)
 (*                                                                     *)
-(* Fichier : set.ml                                                    *)
-(* Auteur : Matthieu Fin                                               *)
-(* Date : 13/04/13                                                     *)
+(* Fichier : set_lsi.ml                                                *)
+(* Auteurs : Fin Matthieu                                              *)
+(*           Poinsot Clement                                           *)
+(* Date : 10/05/13                                                     *)
 (*                                                                     *)
 (*                          Licence informatique 2eme année 2012/2013  *)
 (*                                  UFR-Sciences et Techniques         *)
@@ -19,6 +20,44 @@ sig
   val succ : t -> t
   val pred : t -> t
 end
+
+
+module Entier =
+struct
+  type t = int;;
+  let compare (a : t) (b : t) =
+    if a > b then 1 else if a = b then 0 else -1;;
+  let succ (a : t) = a + 1;;
+  let pred (a : t) = a - 1;;
+end
+
+
+module CoupleEntierEntier =
+struct
+  type t = int * int;;
+  let compare (a : t) (b : t) =
+    if a > b then 1 else if a = b then 0 else -1;;
+  let succ ((a,b) : t) = (a,(b+1));;
+  let pred ((a,b) : t) = (a,(b-1));;
+end
+
+module CoupleEntierChar =
+struct
+  type t = int * char;;
+  let compare (a : t) (b : t) =
+    if a > b then 1 else if a = b then 0 else -1;;
+  let succ ((a,b) : t) =
+    if (int_of_char b) = 255 then
+      ((a + 1),(char_of_int 0))
+    else
+      (a,(char_of_int ((int_of_char b) + 1)));;
+  let pred ((a,b) : t) =
+    if (int_of_char b) = 0 then
+      ((a - 1),(char_of_int 255))
+    else
+      (a,(char_of_int ((int_of_char b) - 1)));;
+end
+
 
 module type Make_sig_ensemble = functor (Ord : TypeOrdonne) ->
 sig
@@ -39,7 +78,7 @@ sig
   val supprime : element -> ensemble -> ensemble
 
   (* Ajout de fonctions a Make_sig_ensemble *)
-  val compare : ensemble -> ensemble -> int(* Comparaison selon l'ordre
+  val compare : ensemble -> ensemble -> int (* Comparaison selon l'ordre
 					      lexicographique par longueur
 					      sur la liste trier de l'ens *)
   val succ : ensemble -> ensemble (* Exemple pour {1,3,5,7,9} 
@@ -64,9 +103,7 @@ sig
   val min_element : ensemble -> element
   val max_element : ensemble -> element
   val split : element -> ensemble -> ensemble * bool * ensemble
-
 end
-
 
   
 module Make : Make_sig_ensemble = functor (Ord : TypeOrdonne) ->
@@ -769,6 +806,13 @@ let suppression_equilibred =
       let sup = (sous_ens_sup_a elem ens)
       in (inf,present,sup);;
 
+
+    (* 
+       Ajout des trois fonctions compare succ et pred a Make
+       pour gérer des ensembles d'ensembles.
+    *)
+
+
     let compare ens1 ens2 =
       let rec compare_aux l1 l2 = 
 	match l1,l2 with
@@ -812,94 +856,3 @@ let suppression_equilibred =
       in liste_vers_ensemble (pred_aux [] (ensemble_vers_liste ens))
     ;;
 end
-
-(* Tests *)
-
-module Entier =
-struct
-  type t = int;;
-  let compare (a : t) (b : t) =
-    if a > b then 1 else if a = b then 0 else -1;;
-  let succ (a : t) = a + 1;;
-  let pred (a : t) = a - 1;;
-end
-
-
-module CoupleEntierEntier =
-struct
-  type t = int * int;;
-  let compare (a : t) (b : t) =
-    if a > b then 1 else if a = b then 0 else -1;;
-  let succ ((a,b) : t) = (a,(b+1));;
-  let pred ((a,b) : t) = (a,(b-1));;
-end
-
-module CoupleEntierChar =
-struct
-  type t = int * char;;
-  let compare (a : t) (b : t) =
-    if a > b then 1 else if a = b then 0 else -1;;
-  let succ ((a,b) : t) =
-    if (int_of_char b) = 255 then
-      ((a + 1),(char_of_int 0))
-    else
-      (a,(char_of_int ((int_of_char b) + 1)));;
-  let pred ((a,b) : t) =
-    if (int_of_char b) = 0 then
-      ((a - 1),(char_of_int 255))
-    else
-      (a,(char_of_int ((int_of_char b) - 1)));;
-end
-
-
-module SetInt = Make(Entier);;
-open SetInt;;
-ajoute 1 ens_vide;;
-
-(*
-module PartiesEnsemble (Make : Make_sig_ensemble) (Ord : TypeOrdonne) =
-struct
-  let compare ens1 ens2 =
-    let rec compare_aux l1 l2 = 
-      match l1,l2 with
-	  [],[] -> 0
-	| l,[] -> 1
-	| [],l -> -1
-	| (v1::ll1,v2::ll2) -> 
-	  let c = Ord.compare v1 v2 in
-	  if c != 0
-	  then c
-	  else compare_aux ll1 ll2
-    in
-    let l1 = (ensemble_vers_liste ens1)
-    and l2 = (ensemble_vers_liste ens2) in
-    let c1 = cardinal ens1
-    and c2 = cardinal ens2 in
-    if c1 > c2 then
-      1
-    else 
-      if c1 < c2 then
-	-1
-      else
-	compare_aux l1 l2
-    ;;
-  
-  let succ ens =
-    let rec succ_aux acc li = 
-      match li with
-          [] -> raise Ensemble_vide
-	| v::[] -> acc @ [(Ord.succ v)]
-	| v::l -> succ_aux (acc @ [v]) l
-    in liste_vers_ensemble (succ_aux [] (ensemble_vers_liste ens))
-  ;;
-  
-  let pred ens =
-      let rec pred_aux acc li = 
-	match li with
-            [] -> raise Ensemble_vide
-	  | v::[] -> acc @ [(Ord.pred v)]
-	  | v::l -> pred_aux (acc @ [v]) l
-      in liste_vers_ensemble (pred_aux [] (ensemble_vers_liste ens))
-    ;;
-end
-*)
