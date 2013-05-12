@@ -103,6 +103,7 @@ sig
   val min_element : ensemble -> element
   val max_element : ensemble -> element
   val split : element -> ensemble -> ensemble * bool * ensemble
+  val creer_ensemble : element -> element -> int -> ensemble
 end
 
   
@@ -769,7 +770,7 @@ let suppression_equilibred =
     let rec max_element = function
         Vide -> raise Ensemble_vide
       | Noeud (c, e, _, Vide) -> e
-      | Noeud (c, e, ag, ad) -> min_element ad;;
+      | Noeud (c, e, ag, ad) -> max_element ad;;
     
     (* Retourne le sous ensemble de ens contenant 
        tous les elements de ens inferieur stricrement a elem *)
@@ -796,7 +797,7 @@ let suppression_equilibred =
 	    else 
 	      (union (insertion e ad) (sous_ens_sup_a elem ag));;
     
-    (* Retourne un tirplet (inf,present,sup) où 
+    (* Retourne un triplet (inf,present,sup) où 
        inf est l'ensemble des elements de ens strictement inferieur a elem
        sup est l'ensemble des elements de ens strictement superieur a elem
        present vaut true si e appartient a ens false sinon *)
@@ -805,6 +806,29 @@ let suppression_equilibred =
       let present = (recherche elem ens) in
       let sup = (sous_ens_sup_a elem ens)
       in (inf,present,sup);;
+
+    (* Prend le k-ieme successeur de e *)
+    let rec successeur_i elem k =
+      if (k = 0) then
+	elem
+      else
+	successeur_i (Ord.succ(elem)) (k - 1);;
+
+    (* *)
+    let creer_ensemble element1 element2 p =
+      if (Ord.compare element1 element2 >= 0) then
+	failwith "element1 < element2 necessaire"
+      else
+	let rec aux elem1 res =
+	  let succ = successeur_i elem1 p in
+	  if ((Ord.compare succ element2) > 0) then
+	    liste_vers_ensemble res
+	  else
+	    aux succ (succ::res)
+	in
+	aux element1 [element1];;
+
+
 
 
     (* 
