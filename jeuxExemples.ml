@@ -115,3 +115,8 @@ open SetInt;;
 
 let ensemble_int = creer_ensemble 0 10000 250;;
 ensemble_vers_liste ensemble_int;;
+
+let f a b = b+1;;
+
+cardinal ensemble_int;;
+fold f ensemble_int 0;;
